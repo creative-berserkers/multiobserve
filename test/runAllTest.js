@@ -4,4 +4,4 @@ var mocha = new Mocha()
 
 mocha.addFile('./testmultiobserve.js')
 
-mocha.run()
+mocha.run(function(){})

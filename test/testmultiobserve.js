@@ -4,12 +4,21 @@ var multiobserve = require('../lib/multiobserve.js').multiobserve
 
 chai.use(spies);
 
-var should = chai.should()
-  , expect = chai.expect;
+
+var expect = chai.expect;
 
 describe("multiobserve", function() {
     describe(".observe()", function() {
-        it("return correct path value and oldValue", function(done) {
+        it('should not call callback when there is no change', function() {
+            var spyCallback = chai.spy()
+            
+            multiobserve.observe({}, spyCallback)
+            
+            expect(spyCallback).to.not.have.been.called()
+        })
+        
+        it("should call callback with correct path value and oldValue when there is one change", function(done) {
+            this.timeout(4000)
             var object = {
                 property: {
                     a: 1,
@@ -24,19 +33,11 @@ describe("multiobserve", function() {
                     expect(change.path).to.eql(['property', 'b', 'c'])
                     expect(change.value).to.eql('bye')
                     expect(change.oldValue).to.eql('hello')
-                    console.log('done called'+change)
+                    
                     done()
                 })
             })
             object.property.b.c = 'bye'
         })
-
-        /*it('should not call callback', function() {
-            var spyCallback = chai.spy()
-            
-            multiobserve.observe({}, spyCallback)
-            
-            expect(spyCallback).to.not.have.been.called()
-        })*/
     })
 })
