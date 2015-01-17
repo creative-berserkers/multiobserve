@@ -2,6 +2,8 @@
 
 Simple library to deeply observe objects. Note that this is still very unstable.
 
+It can be used client side but require Object.observe to be implemented.
+
 For example, if we have following object that we want to observe:
 
 ```js
@@ -31,10 +33,11 @@ we will get callback from library with the change that will look like:
 
 ```js
 {
+    type: 'update',
     path : ['propY', 'propZ'], //path from root
     object: { propX : 10, propY : { propZ : 'hello' } } //root object
     node : {propZ: 'hello'}, //this is object in object tree that was changed
-    value : 'bye',
+    name : 'propZ',
     oldValue : 'hello'
 }
 ```
