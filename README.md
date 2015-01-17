@@ -6,11 +6,9 @@ For example, if we have following object that we want to observe:
 
 ```js
 var object = {
-    property: {
-        a: 1,
-        b: {
-            c: 'hello'
-        }
+    propX : 10,
+    propY : {
+        propZ : 'hello'
     }
 }
 ```
@@ -18,22 +16,28 @@ var object = {
 and we listen on it like this:
 
 ```js
-multiobserve.observe(object, function(changes) {})
+var deep = require('multiobserve').deep
+
+Object.observe(deep(object), function(changes) {})
 ```
 
-and then we change c property like:
+and then we change propZ property like:
 
 ```js
-object.property.b.c = 'bye'
+object.propY.propZ = 'bye'
 ```
 
 we will get callback from library with the change that will look like:
 
 ```js
 {
-    path : ['property', 'b', 'c'],
+    path : ['propY', 'propZ'], //path from root
+    object: { propX : 10, propY : { propZ : 'hello' } } //root object
+    node : {propZ: 'hello'}, //this is object in object tree that was changed
     value : 'bye',
     oldValue : 'hello'
 }
 ```
+
+Note that if you change root object the path will be undefined and node will be undefined
 

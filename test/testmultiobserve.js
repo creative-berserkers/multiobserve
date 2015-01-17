@@ -1,43 +1,39 @@
-var chai= require('chai')
+var chai = require('chai')
 var spies = require('chai-spies')
-var multiobserve = require('../lib/multiobserve.js').multiobserve
+var multiobserve = require('../lib/multiobserve.js')
 
-chai.use(spies);
+chai.use(spies)
 
 
-var expect = chai.expect;
+var expect = chai.expect
+var deep = multiobserve.deep
 
-describe("multiobserve", function() {
-    describe(".observe()", function() {
-        it('should not call callback when there is no change', function() {
-            var spyCallback = chai.spy()
-            
-            multiobserve.observe({}, spyCallback)
-            
-            expect(spyCallback).to.not.have.been.called()
-        })
-        
-        it("should call callback with correct path value and oldValue when there is one change", function(done) {
-            this.timeout(4000)
+describe('multiobserve', function() {
+    describe('.observe()', function() {
+        it('should call callback with correct path value and oldValue when observing', function(done) {
             var object = {
-                property: {
-                    a: 1,
-                    b: {
-                        c: 'hello'
-                    }
+                propX : 10,
+                propY : {
+                    propZ : 33
                 }
             }
             
-            multiobserve.observe(object, function(changes) {
-                changes.forEach(function(change) {
-                    expect(change.path).to.eql(['property', 'b', 'c'])
-                    expect(change.value).to.eql('bye')
-                    expect(change.oldValue).to.eql('hello')
-                    
-                    done()
-                })
+            Object.observe(deep(object), function(changes){
+                expect(changes[0].object).to.eql(object)
+                expect(changes[0].name).to.eql('propX')
+                expect(changes[0].type).to.eql('update')
+                expect(changes[0].oldValue).to.eql(10)
+                
+                expect(changes[1].object).to.eql(object)
+                expect(changes[1].name).to.eql('propZ')
+                expect(changes[1].type).to.eql('update')
+                expect(changes[1].node).to.eql(object.propY)
+                expect(changes[1].oldValue).to.eql(33)
+                expect(changes[1].path).to.eql(['propY','propZ'])
+                done()
             })
-            object.property.b.c = 'bye'
+            object.propX = 11
+            object.propY.propZ = 55
         })
     })
 })
