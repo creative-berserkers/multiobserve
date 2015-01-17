@@ -33,7 +33,7 @@ we will get callback from library with the change that will look like:
 
 ```js
 {
-    type: 'update',
+    type: 'update', //A string indicating the type of change taking place. One of "add", "update", or "delete".
     path : ['propY', 'propZ'], //path from root
     object: { propX : 10, propY : { propZ : 'hello' } } //root object
     node : {propZ: 'hello'}, //this is object in object tree that was changed
