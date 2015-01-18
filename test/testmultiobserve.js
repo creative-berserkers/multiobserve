@@ -19,17 +19,22 @@ describe('multiobserve', function() {
             }
 
             Object.observe(deep(object), function(changes) {
-                expect(changes[0].object).to.eql(object)
-                expect(changes[0].name).to.eql('propX')
-                expect(changes[0].type).to.eql('update')
-                expect(changes[0].oldValue).to.eql(10)
+                expect(changes[0]).to.eql({
+                    object : object,
+                    name : 'propX',
+                    type : 'update',
+                    oldValue : 10
+                })
 
-                expect(changes[1].object).to.eql(object)
-                expect(changes[1].name).to.eql('propZ')
-                expect(changes[1].type).to.eql('update')
-                expect(changes[1].node).to.eql(object.propY)
-                expect(changes[1].oldValue).to.eql(33)
-                expect(changes[1].path).to.eql(['propY', 'propZ'])
+                expect(changes[1]).to.eql({
+                    object : object,
+                    name : 'propZ',
+                    type : 'update',
+                    node : object.propY,
+                    oldValue : 33,
+                    path : ['propY', 'propZ']
+                })
+
                 done()
             })
             object.propX = 11
@@ -43,12 +48,15 @@ describe('multiobserve', function() {
             }
 
             Object.observe(deep(object), function(changes) {
-                expect(changes[0].object).to.eql(object)
-                expect(changes[0].name).to.eql('propZ')
-                expect(changes[0].type).to.eql('add')
-                expect(changes[0].node).to.eql(object.propY)
-                expect(changes[0].oldValue).to.eql(undefined)
-                expect(changes[0].path).to.eql(['propY', 'propZ'])
+                expect(changes[0]).to.eql({
+                    object : object,
+                    name : 'propZ',
+                    type : 'add',
+                    node : object.propY,
+                    oldValue : undefined,
+                    path : ['propY', 'propZ']
+                })
+
                 done()
             })
             object.propY.propZ = 55
@@ -63,12 +71,15 @@ describe('multiobserve', function() {
             }
 
             Object.observe(deep(object), function(changes) {
-                expect(changes[0].object).to.eql(object)
-                expect(changes[0].name).to.eql('propZ')
-                expect(changes[0].type).to.eql('delete')
-                expect(changes[0].node).to.eql(object.propY)
-                expect(changes[0].oldValue).to.eql(33)
-                expect(changes[0].path).to.eql(['propY', 'propZ'])
+                expect(changes[0]).to.eql({
+                    object : object,
+                    name : 'propZ',
+                    type : 'delete',
+                    node : object.propY,
+                    oldValue : 33,
+                    path : ['propY', 'propZ']
+                })
+
                 done()
             })
             delete object.propY.propZ
@@ -83,12 +94,18 @@ describe('multiobserve', function() {
             }
 
             Object.observe(deep(object), function(changes) {
-                expect(changes[0].object).to.eql(object)
-                expect(changes[0].name).to.eql('2')
-                expect(changes[0].type).to.eql('update')
-                expect(changes[0].node).to.eql(object.propY.propZ)
-                expect(changes[0].oldValue).to.eql(3)
-                expect(changes[0].path).to.eql(['propY', 'propZ', '2'])
+                expect(changes[0]).to.eql({
+                    object : object,
+                    name : '2',
+                    type : 'update',
+                    node : object.propY.propZ,
+                    oldValue : 3,
+                    path : ['propY', 'propZ', '2'],
+                    index : undefined,
+                    removed: undefined,
+                    addedCount : undefined
+                })
+                
                 done()
             })
             object.propY.propZ[2] = 99
