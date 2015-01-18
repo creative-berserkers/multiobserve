@@ -9,7 +9,7 @@ var expect = chai.expect
 var deep = multiobserve.deep
 
 describe('multiobserve', function() {
-    describe('.observe()', function() {
+    describe('.deep()', function() {
         it('should call callback with correct path value and oldValue when observing', function(done) {
             var object = {
                 propX: 10,
@@ -72,6 +72,26 @@ describe('multiobserve', function() {
                 done()
             })
             delete object.propY.propZ
+        })
+        
+        it('should call callback change releated with update array element', function(done) {
+            var object = {
+                propX: 10,
+                propY: {
+                    propZ: [1,2,3,4]
+                }
+            }
+
+            Object.observe(deep(object), function(changes) {
+                expect(changes[0].object).to.eql(object)
+                expect(changes[0].name).to.eql('2')
+                expect(changes[0].type).to.eql('update')
+                expect(changes[0].node).to.eql(object.propY.propZ)
+                expect(changes[0].oldValue).to.eql(3)
+                expect(changes[0].path).to.eql(['propY', 'propZ', '2'])
+                done()
+            })
+            object.propY.propZ[2] = 99
         })
     })
 })
