@@ -1,6 +1,6 @@
 {
   "name": "cb-multiobserve",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Simple multiobserve library",
   "main": "lib/multiobserve.js",
   "directories": {
@@ -31,7 +31,7 @@
     "node" : ">=0.11.14" 
   },
   "author": "Odrinwhite",
-  "license": "Apache 2.0",
+  "license": "http://unlicense.org",
   "bugs": {
     "url": "https://github.com/creative-berserkers/multiobserve/issues"
   },
