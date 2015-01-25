@@ -40,6 +40,59 @@ describe('multiobserve', function() {
             object.propX = 11
             object.propY.propZ = 55
         })
+        
+        it('should call callback change releated with array push', function(done) {
+            var object = {
+                propX: 10,
+                propY: []
+            }
+
+            Object.observe(deep(object), function(changes) {
+                expect(changes[0]).to.eql({ 
+                    object : object,
+                    path: [ 'propY' ],
+                    node: object.propY,
+                    type: 'update',
+                    arrayChangeType: 'splice',
+                    name: 'propY',
+                    index: 0,
+                    removed: [],
+                    //added: [ 55 ],
+                    addedCount: 1,
+                    oldValue: undefined 
+                })
+
+                done()
+            })
+            object.propY.push(55)
+        })
+        
+        it('should call callback change releated with array pop', function(done) {
+            var object = {
+                propX: 10,
+                propY: [1,2,3]
+            }
+
+            Object.observe(deep(object), function(changes) {
+                expect(changes[0]).to.eql({ 
+                    object : object,
+                    path: [ 'propY' ],
+                    node: object.propY,
+                    type: 'update',
+                    arrayChangeType: 'splice',
+                    name: 'propY',
+                    index: 2,
+                    removed: [ 3 ],
+                    //added: [ 55 ],
+                    addedCount: 0,
+                    oldValue: undefined 
+                })
+
+                done()
+            })
+            object.propY.pop()
+        })
+        
 
         it('should call callback change releated with add property', function(done) {
             var object = {
@@ -101,15 +154,40 @@ describe('multiobserve', function() {
                     node: object.propY.propZ,
                     oldValue: 3,
                     path: ['propY', 'propZ', '2'],
-                    index: undefined,
-                    removed: undefined,
-                    addedCount: undefined
                 })
 
                 done()
             })
             object.propY.propZ[2] = 99
         })
+        
+        it('should call callback change releated with update element within array', function(done) {
+            var object = {
+                propX: 10,
+                propY: {
+                    propZ: [{
+                        propN : 10
+                    },{
+                        propN : 11
+                    }]
+                }
+            }
+
+            Object.observe(deep(object), function(changes) {
+                expect(changes[0]).to.eql({
+                    object: object,
+                    name: 'propN',
+                    type: 'update',
+                    node: object.propY.propZ[1],
+                    oldValue: 11,
+                    path: ['propY', 'propZ', '1', 'propN'],
+                })
+
+                done()
+            })
+            object.propY.propZ[1].propN = 12
+        })
+
 
         it('should call callback change when adding property and changing its property', function(done) {
             var object = {

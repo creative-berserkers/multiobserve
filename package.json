@@ -1,6 +1,6 @@
 {
   "name": "cb-multiobserve",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Simple multiobserve library",
   "main": "lib/multiobserve.js",
   "directories": {
