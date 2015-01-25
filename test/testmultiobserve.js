@@ -248,6 +248,61 @@ describe('multiobserve', function() {
             })
             
         })
+        
+        it('should call callback change releated with update element within array after push when array contained one element', function(done) {
+            var object = {
+                propX: 10,
+                propY: {
+                    propZ: [{
+                        propN : 89
+                    }]
+                }
+            }
+
+            var callTimes = 0;
+            Object.observe(deep(object), function(changes) {
+                if(callTimes === 0){
+                    expect(changes[0]).to.eql({
+                        object: object,
+                        name: 'propX',
+                        type: 'update',
+                        oldValue: 10
+                    })
+                    expect(changes[1]).to.eql({ 
+                        object : object,
+                        path: [ 'propY' , 'propZ'],
+                        node: object.propY.propZ,
+                        type: 'update',
+                        arrayChangeType: 'splice',
+                        name: 'propZ',
+                        index: 1,
+                        removed: [],
+                        addedCount: 1,
+                        oldValue: undefined 
+                    })
+                    setTimeout(function() {
+                        object.propY.propZ[1].propN = 12
+                    }, 0);
+                } else {
+                    expect(changes[0]).to.eql({
+                        object: object,
+                        name: 'propN',
+                        type: 'update',
+                        node: object.propY.propZ[1],
+                        oldValue: 11,
+                        path: ['propY', 'propZ', '1', 'propN'],
+                    })
+    
+                    done()
+                }
+                callTimes++
+            })
+            object.propX = 34
+            object.propY.propZ.push({
+                propN : 11
+            })
+            
+        })
 
         it('should call callback change when adding property and changing its property', function(done) {
             var object = {
