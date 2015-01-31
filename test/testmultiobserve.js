@@ -1,17 +1,19 @@
-var chai = require('chai')
-var spies = require('chai-spies')
-var multiobserve = require('../lib/multiobserve.js')
+'use strict'
+
+let chai = require('chai')
+let spies = require('chai-spies')
+let multiobserve = require('../lib/multiobserve.js')
 
 chai.use(spies)
 
 
-var expect = chai.expect
-var deep = multiobserve.deep
+let expect = chai.expect
+let deep = multiobserve.deep
 
 describe('multiobserve', function() {
     describe('.deep()', function() {
         it('should call callback with correct path value and oldValue when observing', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: 33
@@ -42,7 +44,7 @@ describe('multiobserve', function() {
         })
         
         it('should call callback change releated with array push', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: []
             }
@@ -68,7 +70,7 @@ describe('multiobserve', function() {
         })
         
         it('should call callback change releated with array pop', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: [1,2,3]
             }
@@ -95,7 +97,7 @@ describe('multiobserve', function() {
         
 
         it('should call callback change releated with add property', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {}
             }
@@ -116,7 +118,7 @@ describe('multiobserve', function() {
         })
 
         it('should call callback change releated with delete property', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: 33
@@ -139,7 +141,7 @@ describe('multiobserve', function() {
         })
 
         it('should call callback change releated with update array element', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: [1, 2, 3, 4]
@@ -161,8 +163,54 @@ describe('multiobserve', function() {
             object.propY.propZ[2] = 99
         })
         
+        it('should call callback change releated with calling splice on array element', function(done) {
+            let object = {
+                propX: 10,
+                propY: {
+                    propZ: [1, 2, 3, 4]
+                }
+            }
+
+            Object.observe(deep(object), function(changes) {
+                //console.log(changes)
+                expect(changes[0]).to.eql({
+                    object: object,
+                    name: '2',
+                    type: 'update',
+                    node: object.propY.propZ,
+                    oldValue: 3,
+                    path: ['propY', 'propZ', '2'],
+                })
+                expect(changes[1]).to.eql({
+                    object: object,
+                    path: ['propY', 'propZ'],
+                    node: object.propY.propZ,
+                    type: 'update',
+                    arrayChangeType: 'splice',
+                    name: 'propZ',
+                    index: 2,
+                    removed: [44],
+                    addedCount: 0,
+                    oldValue: undefined
+                })
+                expect(changes[2]).to.eql({
+                    object: object,
+                    name: '2',
+                    type: 'update',
+                    node: object.propY.propZ,
+                    oldValue: 4,
+                    path: ['propY', 'propZ', '2'],
+                })
+                done()
+            })
+            object.propY.propZ[2] = 44
+            object.propY.propZ.splice(2,1)
+            object.propY.propZ[2] = 99
+            
+        })
+        
         it('should call callback change releated with update element within array', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: [{
@@ -173,7 +221,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            var callTimes = 0;
+            let callTimes = 0;
             Object.observe(deep(object), function(changes) {
                 expect(changes[0]).to.eql({
                     object: object,
@@ -197,14 +245,14 @@ describe('multiobserve', function() {
         })
 
         it('should call callback change releated with update element within array after push', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: []
                 }
             }
 
-            var callTimes = 0;
+            let callTimes = 0;
             Object.observe(deep(object), function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
@@ -250,7 +298,7 @@ describe('multiobserve', function() {
         })
         
         it('should call callback change releated with update element within array after push when array contained one element', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: [{
@@ -259,7 +307,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            var callTimes = 0;
+            let callTimes = 0;
             Object.observe(deep(object), function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
@@ -305,11 +353,11 @@ describe('multiobserve', function() {
         })
 
         it('should call callback change when adding property and changing its property', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {}
             }
-            var callTimes = 0;
+            let callTimes = 0;
 
             Object.observe(deep(object), function(changes) {
                 callTimes++;
@@ -352,7 +400,7 @@ describe('multiobserve', function() {
         })
 
         it('should not call callback when removing property and later changing removed part property', function(done) {
-            var object = {
+            let object = {
                 propX: 10,
                 propY: {
                     propZ: {
@@ -362,8 +410,8 @@ describe('multiobserve', function() {
                     }
                 }
             }
-            var tmpPointer = object.propY.propZ
-            var callTimes = 0;
+            let tmpPointer = object.propY.propZ
+            let callTimes = 0;
 
             function changeFunction(changes) {
                 callTimes++;
@@ -398,7 +446,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            var changeFunctionSpy = chai.spy(changeFunction)
+            let changeFunctionSpy = chai.spy(changeFunction)
 
             Object.observe(deep(object), changeFunctionSpy)
             object.propY.propZ.propN.propP = 69
