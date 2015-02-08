@@ -8,10 +8,10 @@ chai.use(spies)
 
 
 let expect = chai.expect
-let deep = multiobserve.deep
+let Multiobserve = multiobserve.Multiobserve
 
-describe('multiobserve', function() {
-    describe('.deep()', function() {
+describe('Multiobserve', function() {
+    describe('.observe()', function() {
         it('should call callback with correct path value and oldValue when observing', function(done) {
             let object = {
                 propX: 10,
@@ -20,7 +20,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     object: object,
                     name: 'propX',
@@ -49,7 +49,7 @@ describe('multiobserve', function() {
                 propY: []
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({ 
                     object : object,
                     path: [ 'propY' ],
@@ -75,7 +75,7 @@ describe('multiobserve', function() {
                 propY: [1,2,3]
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({ 
                     object : object,
                     path: [ 'propY' ],
@@ -102,7 +102,7 @@ describe('multiobserve', function() {
                 propY: {}
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     object: object,
                     name: 'propZ',
@@ -125,7 +125,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     object: object,
                     name: 'propZ',
@@ -148,7 +148,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     object: object,
                     name: '2',
@@ -171,7 +171,7 @@ describe('multiobserve', function() {
                 }
             }
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 //console.log(changes)
                 expect(changes[0]).to.eql({
                     object: object,
@@ -222,7 +222,7 @@ describe('multiobserve', function() {
             }
 
             let callTimes = 0;
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     object: object,
                     name: 'propX',
@@ -253,7 +253,7 @@ describe('multiobserve', function() {
             }
 
             let callTimes = 0;
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
                         object: object,
@@ -308,7 +308,7 @@ describe('multiobserve', function() {
             }
 
             let callTimes = 0;
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
                         object: object,
@@ -359,7 +359,7 @@ describe('multiobserve', function() {
             }
             let callTimes = 0;
 
-            Object.observe(deep(object), function(changes) {
+            Multiobserve.observe(object, function(changes) {
                 callTimes++;
                 if (callTimes === 1) {
                     expect(changes[0]).to.eql({
@@ -448,7 +448,7 @@ describe('multiobserve', function() {
 
             let changeFunctionSpy = chai.spy(changeFunction)
 
-            Object.observe(deep(object), changeFunctionSpy)
+            Multiobserve.observe(object, changeFunctionSpy)
             object.propY.propZ.propN.propP = 69
 
         })

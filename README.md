@@ -4,7 +4,7 @@ Simple library to deeply observe objects. Note that this is still very unstable.
 
 It can be used client side but require Object.observe to be implemented.
 
-For example, if we have following object that we want to observe:
+For example, we have following object that we want to observe:
 
 ```js
 var object = {
@@ -15,15 +15,15 @@ var object = {
 }
 ```
 
-and we listen on it like this:
+to observe each subproperty object and array in tree structure:
 
 ```js
-var deep = require('multiobserve').deep
+var deep = require('multiobserve').Multiobserve
 
 Object.observe(deep(object), function(changes) {})
 ```
 
-and then we change propZ property like:
+and then if we change propZ property like:
 
 ```js
 object.propY.propZ = 'bye'
@@ -41,6 +41,12 @@ we will get callback from library with the change that will look like:
     oldValue : 'hello'
 }
 ```
+You can provide an optional callback as third parameter which will be called for each property node and by returning true the node will be observed, otherwwise skipped(not implemented yet)
+
+```js
+Object.observe(deep(object), function(changes) {}, function(node, path){})
+
+``
 
 Note that if you change root object the path will be undefined and node will be undefined
 
