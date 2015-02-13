@@ -10,7 +10,7 @@ chai.use(spies)
 let expect = chai.expect
 let Multiobserve = multiobserve.Multiobserve
 
-describe('Multiobserve', function() {
+describe('Multiobserve', function() { 
     describe('.observe() - object property', function() {
         it('should call callback with correct path value and oldValue when observing', function(done) {
             let object = {
@@ -369,6 +369,7 @@ describe('Multiobserve', function() {
 
             let callTimes = 0;
             Multiobserve.observe(object, function(changes) {
+                console.log(changes)
                 console.log(changes)
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
