@@ -15,7 +15,7 @@
     "chai-spies": "^0.5.1"
   },
   "scripts": {
-    "test": "test/testmultiobserve.js"
+    "test": "iojs --harmony --harmony-object-literals node_modules/mocha/bin/_mocha --ui tdd"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "observe"
   ],
   "engines" : { 
-    "node" : ">=0.11.14" 
+    "iojs" : ">=1.2.0" 
   },
   "author": "Odrinwhite",
   "license": "http://unlicense.org",
