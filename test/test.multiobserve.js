@@ -508,9 +508,8 @@ describe('Multiobserve', function() {
     })
 
     describe('.observe() - custom modifier', function() {
-        let object = {}
-
         it('should create swap modifier', function(done) {
+            let object = {}
             function swap(object, node, prop1, prop2){
                 Multiobserve.performChange(object, function(notify){
                     let tmp = node[prop1]
