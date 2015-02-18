@@ -48,11 +48,11 @@ we will get callback from library with the change:
 You can provide an optional callback as third parameter which will be called for each property node and by returning *true* the node will be observed, otherwise skipped. For example:
 
 ```js
-Object.observe(object, function(changes) {}, function(node, path){
+Multiobserve.observe(object, function(changes) {}, function(node, path){
     if(typeof node === 'function') { return false }
     else  { return true }
 })
-``
+```
 
 
 
