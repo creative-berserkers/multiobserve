@@ -506,6 +506,46 @@ describe('Multiobserve', function() {
             })
         })
     })
+    
+    describe('.findNode()', function() {
+        it('should return node', function(done) {
+            let object = {
+                propX: {
+                    propK: 'test'
+                },
+                propY: {
+                    propZ: [{
+                        propN: {name: 'john'},
+                        propM: function () {
+                        }
+                    }]
+                }
+            }
+            const node = Multiobserve.findNode(object, ['propX','propK'])
+            expect(node).to.eql(object.propX.propK)
+            done()
+        })
+    })
+    
+    describe('.findNode()', function() {
+        it('should return undefined', function(done) {
+            let object = {
+                propX: {
+                    propK: 'test'
+                },
+                propY: {
+                    propZ: [{
+                        propN: {name: 'john'},
+                        propM: function () {
+                        }
+                    }]
+                }
+            }
+            const node = Multiobserve.findNode(object, ['propY','propZ','propZ','propN','propU'])
+            expect(node).to.eql(undefined)
+            done()
+        })
+    })
 
     describe('.observe() - custom modifier', function() {
         it('should create swap modifier', function(done) {
