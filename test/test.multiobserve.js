@@ -546,6 +546,31 @@ describe('Multiobserve', function() {
             done()
         })
     })
+    
+    describe('.methodsToPaths()', function() {
+        it('should find all methods', function(done) {
+            let object = {
+                method1: function(){},
+                prop1 : {
+                    method2 : function(){},
+                    arr1 : [{
+                        method3 : function(){},
+                        prop2 : {
+                            method4 : function(){}
+                        }
+                    }]
+                }
+                
+            }
+            const methods = Multiobserve.methodsToPaths(object)
+            expect(methods.length).to.eql(4)
+            expect(methods[0]).to.eql(['method1'])
+            expect(methods[1]).to.eql(['prop1', 'method2'])
+            expect(methods[2]).to.eql(['prop1', 'arr1', '0', 'method3'])
+            expect(methods[3]).to.eql(['prop1', 'arr1', '0', 'prop2', 'method4'])
+            done()
+        })
+    })
 
     describe('.observe() - custom modifier', function() {
         it('should create swap modifier', function(done) {
