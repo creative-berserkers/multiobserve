@@ -572,21 +572,61 @@ describe('Multiobserve', function() {
         })
     })
 
-    describe('.observe() - custom modifier', function() {
+    /*describe('.observe() - custom modifier', function() {
         it('should create swap modifier', function(done) {
-            let object = {}
-            function swap(object, node, prop1, prop2){
-                Multiobserve.performChange(object, function(notify){
-                    let tmp = node[prop1]
-                    node[prop1] = node[prop2]
-                    node[prop2] = tmp
-
-                    notify({
-                        changeName : 'swap'
-                    })
+            let object = {
+                entities : [{
+                    name : 'player1',
+                    position : {
+                        x : 1,
+                        y : 2
+                    }
+                },
+                {
+                    name : 'player2',
+                    position : {
+                        x : 3,
+                        y : 4
+                    }
+                }]
+            }
+            
+            const handler = Multiobserve.observe(object, function(changes) {
+                expect(changes[0]).to.eql({
+                    node: object,
+                    path: ['entities', 'player1'],
+                    type: 'move',
+                    msg : {
+                        position : {
+                            x : 10,
+                            y : 8
+                        }
+                    }
+                })
+            })
+            
+            let moveFunction = handler.createFunction("move", function(x,y){
+                this.x = x;
+                this.y = y;
+            })
+            
+            function move(handler, entity, position){
+                handler.performChange('move', function(object, notify){
+                    let target = object.entities.find((el) => {el.name === entity})
+                    if(target !== undefined){
+                        target.position.x = position.x
+                        target.position.y = position.y
+                        
+                        notify(['entities', entity ], {
+                            position : position
+                        })
+                    }
                 })
             }
+            
+            move(handler, 'player1', {x:10,y:8})
+            
             done()
         })
-    })
+    })*/
 })
