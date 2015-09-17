@@ -368,7 +368,7 @@ describe('Multiobserve', function() {
             }
 
             let callTimes = 0;
-            var tmp
+            let tmp
             Multiobserve.observe(object, function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
