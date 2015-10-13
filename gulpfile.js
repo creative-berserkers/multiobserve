@@ -12,7 +12,7 @@ gulp.task('test',['jshint'], function (cb) {
       gulp.src(['./test/*.js'])
         .pipe(mocha())
 	.pipe(istanbul.writeReports())
-	.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
+	.pipe(istanbul.enforceThresholds({ thresholds: { global: 70 } }))
 	.on('end', cb)
     })
 })
