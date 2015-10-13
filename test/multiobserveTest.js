@@ -545,6 +545,24 @@ describe('Multiobserve', function() {
             expect(node).to.eql(undefined)
             done()
         })
+
+        it('should return undefined when second argument is not array', function(done) {
+            let object = {
+                propX: {
+                    propK: 'test'
+                },
+                propY: {
+                    propZ: [{
+                        propN: {name: 'john'},
+                        propM: function () {
+                        }
+                    }]
+                }
+            }
+            const node = Multiobserve.findNode(object, "xxx")
+            expect(node).to.eql(undefined)
+            done()
+        })
     })
 
     describe('.methodsToPaths()', function() {

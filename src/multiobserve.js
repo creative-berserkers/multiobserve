@@ -235,7 +235,6 @@ exports.Multiobserve = {
                         oldValue : change.oldValue
                     }
                 }
-                return {}
             }))
         })
         objects.set(object, {
@@ -244,22 +243,6 @@ exports.Multiobserve = {
             handlers,
             ctx
         })
-        return {
-            performChange(name, changeFn){
-                rootNotifier.notify({
-                    name : name,
-                    type : 'update',
-                    batchChangeType : 'begin'
-                })
-                const resultMsg = changeFn()
-                rootNotifier.notify({
-                    name : name,
-                    type : 'update',
-                    batchChangeType : 'end',
-                    resultMsg : resultMsg
-                })
-            }
-        }
     },
     findNode(object, path){
         if(!Array.isArray(path)) {
