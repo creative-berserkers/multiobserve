@@ -2,20 +2,22 @@
   "name": "cb-multiobserve",
   "version": "2.3.2",
   "description": "Simple multiobserve library",
-  "main": "lib/multiobserve.js",
+  "main": "src/multiobserve.js",
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-    
-  },
+  "dependencies": {},
   "devDependencies": {
-    "mocha": "^2.1.0",
     "chai": "^2.0.0",
-    "chai-spies": "^0.5.1"
+    "chai-spies": "^0.5.1",
+    "gulp": "^3.9.0",
+    "gulp-istanbul": "^0.10.1",
+    "gulp-jshint": "^1.11.2",
+    "gulp-mocha": "^2.1.3",
+    "jshint-stylish": "^2.0.1"
   },
   "scripts": {
-    "test": "node node_modules/mocha/bin/_mocha --ui tdd"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
@@ -27,11 +29,11 @@
     "deep",
     "observe"
   ],
-  "engines" : { 
-    "iojs" : ">=1.2.0" 
+  "engines": {
+    "node": ">=4.2.0"
   },
   "author": "Odrinwhite",
-  "license": "http://unlicense.org",
+  "license": "Unlicense",
   "bugs": {
     "url": "https://github.com/creative-berserkers/multiobserve/issues"
   },

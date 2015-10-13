@@ -3,7 +3,7 @@
 const objects = new WeakMap()
 
 function typeOf(value) {
-    let s = typeof value;
+    let s = typeof value
     if (s === 'object') {
         if (value) {
             if (value instanceof Array) {
@@ -11,10 +11,10 @@ function typeOf(value) {
             }
         }
         else {
-            s = 'null';
+            s = 'null'
         }
     }
-    return s;
+    return s
 }
 
 function observeObject(ctx, object, path) {
@@ -43,7 +43,7 @@ function observeArray(ctx, object, name, path) {
     Array.observe(object, function(changes) {
         changes.forEach(function(change) {
             let msg = null
-            
+
             if(change.type === 'update'){
                 msg = {
                     path: path.concat(change.name),
@@ -65,9 +65,9 @@ function observeArray(ctx, object, name, path) {
                     addedCount: change.addedCount,
                     oldValue: change.oldValue
                 }
-                
-                let added = change.object.slice(change.index,change.index+change.addedCount);
-                
+
+                let added = change.object.slice(change.index,change.index+change.addedCount)
+
                 added.forEach(function(element){
                     if(typeOf(element) !== 'array' && typeOf(element) !== 'object' && typeOf(element) !== 'function') { return }
                     if(!ctx.filter(element,path.concat(String(change.index)))) { return }
@@ -82,10 +82,10 @@ function observeArray(ctx, object, name, path) {
                         Object.unobserve(element, ctx.getHandler(element,path.concat(String(change.index))))
                         unobserveDeepObject(ctx, element, change.path)
                     }
-                    
+
                 })
             }
-            
+
             ctx.notify(msg)
         })
     })
@@ -153,7 +153,7 @@ function observeDeepArray(ctx, array, path) {
 
 function comparePaths(path1, path2){
     return (path1.length === path2.length) && path1.every(function(element, index) {
-        return element === path2[index];
+        return element === path2[index]
     })
 }
 
@@ -279,7 +279,7 @@ exports.Multiobserve = {
     },
     methodsToPaths(object){
         const methods = []
-        
+
         findAndAddMethod(object, [], methods)
         return methods
     }

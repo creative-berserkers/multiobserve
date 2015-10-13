@@ -2,7 +2,7 @@
 
 let chai = require('chai')
 let spies = require('chai-spies')
-let multiobserve = require('../lib/multiobserve.js')
+let multiobserve = require('../src/multiobserve.js')
 
 chai.use(spies)
 
@@ -10,7 +10,7 @@ chai.use(spies)
 let expect = chai.expect
 let Multiobserve = multiobserve.Multiobserve
 
-describe('Multiobserve', function() { 
+describe('Multiobserve', function() {
     describe('.observe() - object property', function() {
         it('should call callback with correct path value and oldValue when observing', function(done) {
             let object = {
@@ -40,7 +40,7 @@ describe('Multiobserve', function() {
             object.propX = 11
             object.propY.propZ = 55
         })
-        
+
         it('should call callback change releated with add property', function(done) {
             let object = {
                 propX: 10,
@@ -80,7 +80,7 @@ describe('Multiobserve', function() {
             })
             delete object.propY.propZ
         })
-        
+
         it('should call callback change when adding property and changing its property', function(done) {
             let object = {
                 propX: 10,
@@ -175,9 +175,9 @@ describe('Multiobserve', function() {
 
         })
     })
-    
+
     describe('.observe() - array property', function() {
-        
+
         it('should call callback change releated with array push', function(done) {
             let object = {
                 propX: 10,
@@ -185,7 +185,7 @@ describe('Multiobserve', function() {
             }
 
             Multiobserve.observe(object, function(changes) {
-                expect(changes[0]).to.eql({ 
+                expect(changes[0]).to.eql({
                     path: [ 'propY' ],
                     node: object.propY,
                     type: 'splice',
@@ -198,7 +198,7 @@ describe('Multiobserve', function() {
             })
             object.propY.push(55)
         })
-        
+
         it('should call callback change releated with array pop', function(done) {
             let object = {
                 propX: 10,
@@ -206,7 +206,7 @@ describe('Multiobserve', function() {
             }
 
             Multiobserve.observe(object, function(changes) {
-                expect(changes[0]).to.eql({ 
+                expect(changes[0]).to.eql({
                     path: [ 'propY' ],
                     node: object.propY,
                     type: 'splice',
@@ -240,7 +240,7 @@ describe('Multiobserve', function() {
             })
             object.propY.propZ[2] = 99
         })
-        
+
         it('should call callback change related with calling splice on array element', function(done) {
             let object = {
                 propX: 10,
@@ -275,9 +275,9 @@ describe('Multiobserve', function() {
             object.propY.propZ[2] = 44
             object.propY.propZ.splice(2,1)
             object.propY.propZ[2] = 99
-            
+
         })
-        
+
         it('should call callback change related with update element within array', function(done) {
             let object = {
                 propX: 10,
@@ -327,7 +327,7 @@ describe('Multiobserve', function() {
                         type: 'update',
                         oldValue: 10
                     })
-                    expect(changes[1]).to.eql({ 
+                    expect(changes[1]).to.eql({
                         node: object.propY.propZ,
                         path: [ 'propY' , 'propZ'],
                         type: 'splice',
@@ -345,7 +345,7 @@ describe('Multiobserve', function() {
                         type: 'update',
                         oldValue: 11
                     })
-    
+
                     done()
                 }
                 callTimes++
@@ -354,9 +354,9 @@ describe('Multiobserve', function() {
             object.propY.propZ.push({
                 propN : 11
             })
-            
+
         })
-        
+
         it('should call callback change related with update element within array after push when array contained one element', function(done) {
             let object = {
                 propX: 10,
@@ -402,7 +402,7 @@ describe('Multiobserve', function() {
                             propN : 3333
                         })
                     }, 0);
-    
+
 
                 } else if(callTimes === 2){
                     expect(changes[0]).to.eql({
@@ -442,7 +442,7 @@ describe('Multiobserve', function() {
             object.propY.propZ.push({
                 propN : 11
             })
-            
+
         })
     })
 
@@ -506,7 +506,7 @@ describe('Multiobserve', function() {
             })
         })
     })
-    
+
     describe('.findNode()', function() {
         it('should return node', function(done) {
             let object = {
@@ -526,7 +526,7 @@ describe('Multiobserve', function() {
             done()
         })
     })
-    
+
     describe('.findNode()', function() {
         it('should return undefined', function(done) {
             let object = {
@@ -546,7 +546,7 @@ describe('Multiobserve', function() {
             done()
         })
     })
-    
+
     describe('.methodsToPaths()', function() {
         it('should find all methods', function(done) {
             let object = {
@@ -560,7 +560,7 @@ describe('Multiobserve', function() {
                         }
                     }]
                 }
-                
+
             }
             const methods = Multiobserve.methodsToPaths(object)
             expect(methods.length).to.eql(4)
@@ -590,7 +590,7 @@ describe('Multiobserve', function() {
                     }
                 }]
             }
-            
+
             const handler = Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     node: object,
@@ -604,28 +604,28 @@ describe('Multiobserve', function() {
                     }
                 })
             })
-            
+
             let moveFunction = handler.createFunction("move", function(x,y){
                 this.x = x;
                 this.y = y;
             })
-            
+
             function move(handler, entity, position){
                 handler.performChange('move', function(object, notify){
                     let target = object.entities.find((el) => {el.name === entity})
                     if(target !== undefined){
                         target.position.x = position.x
                         target.position.y = position.y
-                        
+
                         notify(['entities', entity ], {
                             position : position
                         })
                     }
                 })
             }
-            
+
             move(handler, 'player1', {x:10,y:8})
-            
+
             done()
         })
     })*/
