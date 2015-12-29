@@ -14,7 +14,7 @@ describe('Multiobserve', function() {
     describe('.observe() - object property', function() {
         it('should call callback with correct path value and oldValue when observing', function(done) {
             let object = {
-                propX: 10,
+                propX: 1,
                 propY: {
                     propZ: 33
                 }
@@ -22,23 +22,25 @@ describe('Multiobserve', function() {
 
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
-                    node: object,
                     path: ['propX'],
                     type: 'update',
-                    oldValue: 10
-                })
-
-                expect(changes[1]).to.eql({
-                    node: object.propY,
-                    path: ['propY', 'propZ'],
-                    type: 'update',
-                    oldValue: 33
+                    newValue: 11,
+                    oldValue: 1
                 })
 
                 done()
             })
+            object.propX = 1
+            object.propX = 2
+            object.propX = 3
+            object.propX = 4
+            object.propX = 5
+            object.propX = 6
+            object.propX = 7
+            object.propX = 8
+            object.propX = 9
+            object.propX = 10
             object.propX = 11
-            object.propY.propZ = 55
         })
 
         it('should call callback change releated with add property', function(done) {
@@ -49,9 +51,9 @@ describe('Multiobserve', function() {
 
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
-                    node: object.propY,
                     path: ['propY', 'propZ'],
                     type: 'add',
+                    newValue : 55,
                     oldValue: undefined
                 })
 
@@ -70,9 +72,9 @@ describe('Multiobserve', function() {
 
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
-                    node: object.propY,
                     path: ['propY', 'propZ'],
                     type: 'delete',
+                    newValue : undefined,
                     oldValue: 33
                 })
 
@@ -92,15 +94,13 @@ describe('Multiobserve', function() {
                 callTimes++;
                 if (callTimes === 1) {
                     expect(changes[0]).to.eql({
-                        node: {
-                            propZ: {
-                                propN: {
-                                    propP: 20
-                                }
-                            }
-                        },
                         path: ['propY', 'propZ'],
                         type: 'add',
+                        newValue : {
+                            propN: {
+                                propP: 20
+                            }
+                        },
                         oldValue: undefined
                     })
                     setTimeout(function() {
@@ -108,9 +108,9 @@ describe('Multiobserve', function() {
                     }, 0);
                 } else {
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ.propN,
                         path: ['propY', 'propZ', 'propN', 'propP'],
                         type: 'update',
+                        newValue : 65,
                         oldValue: 20
                     })
                     done()
@@ -143,9 +143,9 @@ describe('Multiobserve', function() {
                 callTimes++;
                 if (callTimes === 1) {
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ.propN,
                         path: ['propY', 'propZ', 'propN', 'propP'],
                         type: 'update',
+                        newValue : 69,
                         oldValue: 10
                     })
 
@@ -154,9 +154,9 @@ describe('Multiobserve', function() {
                     }, 0)
                 } else {
                     expect(changes[0]).to.eql({
-                        node: {},
                         path: ['propY', 'propZ'],
                         type: 'delete',
+                        newValue : undefined,
                         oldValue: tmpPointer
                     })
                     tmpPointer.propN.propP = 32
@@ -187,11 +187,10 @@ describe('Multiobserve', function() {
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     path: [ 'propY' ],
-                    node: object.propY,
                     type: 'splice',
                     index: 0,
-                    removed: [],
-                    addedCount: 1
+                    added: [55],
+                    removedCount: 0
                 })
 
                 done()
@@ -208,11 +207,10 @@ describe('Multiobserve', function() {
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
                     path: [ 'propY' ],
-                    node: object.propY,
                     type: 'splice',
                     index: 2,
-                    removed: [ 3 ],
-                    addedCount: 0
+                    added: [ ],
+                    removedCount: 1
                 })
 
                 done()
@@ -230,9 +228,9 @@ describe('Multiobserve', function() {
 
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
-                    node: object.propY.propZ,
                     path: ['propY', 'propZ', '2'],
                     type: 'update',
+                    newValue : 99,
                     oldValue: 3
                 })
 
@@ -251,23 +249,22 @@ describe('Multiobserve', function() {
 
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
-                    node: object.propY.propZ,
                     path: ['propY', 'propZ', '2'],
                     type: 'update',
+                    newValue : 99,
                     oldValue: 3
                 })
                 expect(changes[1]).to.eql({
-                    node: object.propY.propZ,
                     path: ['propY', 'propZ'],
                     type: 'splice',
                     index: 2,
-                    removed: [44],
-                    addedCount: 0
+                    added: [],
+                    removedCount: 1
                 })
                 expect(changes[2]).to.eql({
-                    node: object.propY.propZ,
                     path: ['propY', 'propZ', '2'],
                     type: 'update',
+                    newValue : 99,
                     oldValue: 4
                 })
                 done()
@@ -292,15 +289,15 @@ describe('Multiobserve', function() {
 
             Multiobserve.observe(object, function(changes) {
                 expect(changes[0]).to.eql({
-                    node: object,
                     path: ['propX'],
                     type: 'update',
+                    newValue: 34,
                     oldValue: 10
                 })
                 expect(changes[1]).to.eql({
-                    node: object.propY.propZ[1],
                     path: ['propY', 'propZ', '1', 'propN'],
                     type: 'update',
+                    newValue: 12,
                     oldValue: 11
                 })
 
@@ -322,27 +319,28 @@ describe('Multiobserve', function() {
             Multiobserve.observe(object, function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
-                        node: object,
                         path: ['propX'],
                         type: 'update',
+                        newValue : 34,
                         oldValue: 10
                     })
                     expect(changes[1]).to.eql({
-                        node: object.propY.propZ,
                         path: [ 'propY' , 'propZ'],
                         type: 'splice',
                         index: 0,
-                        removed: [],
-                        addedCount: 1
+                        added: [{
+                            propN : 11
+                        }],
+                        removedCount: 0
                     })
                     setTimeout(function() {
                         object.propY.propZ[0].propN = 12
                     }, 0);
                 } else {
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ[0],
                         path: ['propY', 'propZ', '0', 'propN'],
                         type: 'update',
+                        newValue: 12,
                         oldValue: 11
                     })
 
@@ -372,12 +370,13 @@ describe('Multiobserve', function() {
             Multiobserve.observe(object, function(changes) {
                 if(callTimes === 0){
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ,
                         path: [ 'propY' , 'propZ'],
                         type: 'splice',
                         index: 1,
-                        removed: [],
-                        addedCount: 1
+                        added: [{
+                            propN : 11
+                        }],
+                        removedCount: 0
                     })
                     setTimeout(function() {
                         object.propY.propZ[0].propN = 1111
@@ -385,15 +384,15 @@ describe('Multiobserve', function() {
                     }, 0);
                 } else if(callTimes === 1){
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ[0],
                         path: ['propY', 'propZ', '0', 'propN'],
                         type: 'update',
+                        newValue: 1111,
                         oldValue: 89
                     })
                     expect(changes[1]).to.eql({
-                        node: object.propY.propZ[1],
                         path: ['propY', 'propZ', '1', 'propN'],
                         type: 'update',
+                        newValue: 2222,
                         oldValue: 11
                     })
                     setTimeout(function() {
@@ -406,14 +405,13 @@ describe('Multiobserve', function() {
 
                 } else if(callTimes === 2){
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ,
                         path: [ 'propY' , 'propZ'],
                         type: 'splice',
                         index: 0,
-                        removed: [{
-                            propN: 1111
+                        added: [{
+                            propN: 3333
                         }],
-                        addedCount: 1
+                        removedCount: 1
                     })
                     setTimeout(function() {
                         tmp.propN = 4444
@@ -423,15 +421,15 @@ describe('Multiobserve', function() {
 
                 } else {
                     expect(changes[0]).to.eql({
-                        node: object.propY.propZ[1],
                         path: ['propY', 'propZ', '1', 'propN'],
                         type: 'update',
+                        newValue: 6666,
                         oldValue: 2222
                     })
                     expect(changes[1]).to.eql({
-                        node: object.propY.propZ[0],
                         path: ['propY', 'propZ', '0', 'propN'],
                         type: 'update',
+                        newValue: 5555,
                         oldValue: 3333
                     })
 

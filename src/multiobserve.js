@@ -22,9 +22,9 @@ function observeObject(ctx, object, path) {
         changes.forEach(function(change) {
             ctx.notify({
                 path: path.concat(change.name),
-                node: change.object,
                 type: change.type,
                 name: change.name,
+                newValue : change.object[change.name],
                 oldValue: change.oldValue
             })
             if(change.type === 'add'){
@@ -47,26 +47,23 @@ function observeArray(ctx, object, name, path) {
             if(change.type === 'update'){
                 msg = {
                     path: path.concat(change.name),
-                    node: change.object,
                     type: 'update',
                     name: change.name,
+                    newValue : change.object[change.name],
                     oldValue: change.oldValue
+
                 }
             } else if (change.type === 'splice'){
+                let added = change.object.slice(change.index,change.index+change.addedCount)
                 msg = {
                     path: path,
-                    node: change.object,
                     type: 'update',
                     arrayChangeType: change.type,
                     name: name,
                     index: change.index,
-                    removed: change.removed,
-                    //added: change.object.slice(change.index,change.addedCount),
-                    addedCount: change.addedCount,
-                    oldValue: change.oldValue
+                    removedCount: change.removed.length,
+                    added: added,
                 }
-
-                let added = change.object.slice(change.index,change.index+change.addedCount)
 
                 added.forEach(function(element){
                     if(typeOf(element) !== 'array' && typeOf(element) !== 'object' && typeOf(element) !== 'function') { return }
@@ -220,18 +217,17 @@ exports.Multiobserve = {
             callback(changes.map(function(change){
                 if(change.arrayChangeType === 'splice'){
                     return {
-                        node : change.node || object,
                         path : change.path || change.name,
                         type : 'splice',
                         index: change.index,
-                        removed: change.removed,
-                        addedCount: change.addedCount
+                        removedCount: change.removedCount,
+                        added: change.added
                     }
                 } else if(change.type === 'update' || change.type === 'add' || change.type === 'delete'){
                     return {
-                        node : change.node || object,
-                        path : change.path || change.name,
                         type : change.type,
+                        path : change.path || change.name,
+                        newValue : change.newValue,
                         oldValue : change.oldValue
                     }
                 }
